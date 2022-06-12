@@ -57,14 +57,17 @@
 DetectorConstruction::DetectorConstruction()
  :G4VUserDetectorConstruction(),
   fNLtot(1000),fNRtot(1000),fDLradl(0.0001),fDRradl(0.0001),
-  fDLlength(0.1),fDRlength(0.1),fWorldMaterial(nullptr),
-  fSolidWorld(nullptr),fLogicWorld(nullptr),fPhysiWorld(nullptr)
+  fDLlength(0.1),fDRlength(0.1),fWorldMaterial(nullptr),fAbsorberMaterial(nullptr),
+  fSolidWorld(nullptr),fLogicWorld(nullptr),fPhysiWorld(nullptr),
+  fSolidAbsorber(nullptr),fLogicAbsorber(nullptr),fPhysiAbsorber(nullptr)
 {
   DefineMaterials();
   SetWorldMaterial("G4_Galactic");
-  fAbsorberSizeYZ = 10.*mm;
-  fAbsorberThickness = 1.*mm;
+  SetAbsorberMaterial("G4_W");
+  fAbsorberSizeYZ = 5.*mm;
   fDetectorMessenger = new DetectorMessenger(this);
+  SetAbsorberThickness(1.*mm);
+
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -215,7 +218,6 @@ void DetectorConstruction::SetAbsorberThickness(G4double val)
 {
   fAbsorberThickness = val;
   Construct();
-  G4RunManager::GetRunManager()->PhysicsHasBeenModified();
 }
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
