@@ -32,7 +32,7 @@
 #include "DetectorConstruction.hh"
 #include "DetectorMessenger.hh"
 
-#include "G4Tubs.hh"
+#include "G4Box.hh"
 #include "G4LogicalVolume.hh"
 #include "G4PVPlacement.hh"
 
@@ -54,13 +54,14 @@
 
 DetectorConstruction::DetectorConstruction()
  :G4VUserDetectorConstruction(),
-  fNLtot(40),fNRtot(50),fDLradl(0.5),fDRradl(0.1),
-  fDLlength(0.),fDRlength(0.),fMaterial(nullptr),
-  fEcalLength(0.),fEcalRadius(0.),
-  fSolidEcal(nullptr),fLogicEcal(nullptr),fPhysiEcal(nullptr)
+  fNLtot(1000),fNRtot(1000),fDLradl(0.0001),fDRradl(0.0001),
+  fDLlength(0.1),fDRlength(0.1),fWorldMaterial(nullptr),
+  fSolidWorld(nullptr),fLogicWorld(nullptr),fPhysiWorld(nullptr)
 {
   DefineMaterials();
-  SetMaterial("G4_PbWO4");
+  SetMaterial("G4_Galactic");
+  fAbsorberSizeYZ = 10.*mm;
+  fAbsorberThickness = 1.*mm;
   fDetectorMessenger = new DetectorMessenger(this);
 }
 
@@ -121,12 +122,12 @@ void DetectorConstruction::DefineMaterials()
 
 void DetectorConstruction::UpdateParameters()
 {
-  G4double Radl = fMaterial->GetRadlen();
+  G4double Radl = fWorldMaterial->GetRadlen();
   fDLlength = fDLradl*Radl; fDRlength = fDRradl*Radl;
-  fEcalLength = fNLtot*fDLlength;  fEcalRadius = fNRtot*fDRlength;
-  if(fSolidEcal) {
-    fSolidEcal->SetOuterRadius(fEcalRadius);
-    fSolidEcal->SetZHalfLength(0.5*fEcalLength);
+  fWorldLength = fNLtot*fDLlength;  fWorldRadius = fNRtot*fDRlength;
+  if(fSolidWorld) {
+    fSolidWorld->SetOuterRadius(fWorldRadius);
+    fSolidWorld->SetZHalfLength(0.5*fWorldLength);
   }
 }
 
@@ -136,39 +137,82 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 {
   UpdateParameters();
   //
-  // Ecal
+  // World
   //
-  if(!fPhysiEcal) { 
-    fSolidEcal = new G4Tubs("Ecal",0.,fEcalRadius,0.5*fEcalLength,0.,360*deg);
-    fLogicEcal = new G4LogicalVolume( fSolidEcal,fMaterial,"Ecal",0,0,0);
-    fPhysiEcal = new G4PVPlacement(0,G4ThreeVector(),
-                                   fLogicEcal,"Ecal",0,false,0);
+  if(!fPhysiWorld) { 
+    fSolidWorld = new G4Box("World",                                //its name
+                   fAbsorberSizeYZ/2,fAbsorberSizeYZ/2,fAbsorberSizeYZ/2);  //its size
+                         
+  fWorldMaterial = nist->FindOrBuildMaterial("G4_AIR");
+  fLogicWorld = new G4LogicalVolume(fSolidWorld,          //its solid
+                                   fWorldMaterial,        //its material
+                                   "World");              //its name
+                                   
+  fPhysiWorld = new G4PVPlacement(0,                      //no rotation
+                                 G4ThreeVector(0.,0.,0.), //at (0,0,0)
+                                 fLogicWorld,             //its logical volume
+                                 "World",                 //its name
+                                 0,                       //its mother  volume
+                                 false,                   //no boolean operation
+                                 0);                      //copy number
+  fLogicWorld->SetVisAttributes(G4VisAttributes::GetInvisible());             
   }
-  G4cout << "\n Absorber is " << G4BestUnit(fEcalLength,"Length")
-         << " of " << fMaterial->GetName()
-         << "  R= " << fEcalRadius/cm << " cm \n" << G4endl;
-  G4cout << fMaterial << G4endl;	 
+  if(!fPhysiAbsorber) { 
+    fSolidAbsorber = new G4Box("Absorber",        
+                      fAbsorberThickness/2,fAbsorberSizeYZ/2,fAbsorberSizeYZ/2);        
+   fAbsorberMaterial = nist->FindOrBuildMaterial("Aluminium");
+   fLogicAbsorber = new G4LogicalVolume(fSolidAbsorber,    //its solid
+                                       fAbsorberMaterial, //its material
+                                       "Absorber");       //its name
+                                                
+  fPhysiAbsorber = new G4PVPlacement(0,                   //no rotation
+                        G4ThreeVector(0,0.,0.),    //its position
+                                fLogicAbsorber,     //its logical volume
+                                "Absorber",         //its name
+                                fLogicWorld,        //its mother
+                                false,              //no boulean operat
+                                0);                 //copy number
+  }
+
   //
   //always return the physical World
   //
-  return fPhysiEcal;
+  return fPhysiWorld;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void DetectorConstruction::SetMaterial(const G4String& materialChoice)
+void DetectorConstruction::SetWorldMaterial(const G4String& materialChoice)
 {
   // search the material by its name
   G4Material* pttoMaterial =
     G4NistManager::Instance()->FindOrBuildMaterial(materialChoice);
 
-  if(pttoMaterial &&  fMaterial != pttoMaterial) {
-    fMaterial = pttoMaterial;
-    if(fLogicEcal) { fLogicEcal->SetMaterial(fMaterial); }
+  if(pttoMaterial &&  fWorldMaterial != pttoMaterial) {
+    fWorldMaterial = pttoMaterial;
+    if(fLogicWorld) { fLogicWorld->SetMaterial(fWorldMaterial); }
     G4RunManager::GetRunManager()->PhysicsHasBeenModified();
   }
 }
 
+void DetectorConstruction::SetAbsorberMaterial(const G4String& materialChoice)
+{
+  // search the material by its name
+  G4Material* pttoMaterial =
+    G4NistManager::Instance()->FindOrBuildMaterial(materialChoice);
+
+  if (pttoMaterial && fAbsorberMaterial != pttoMaterial) {
+    fAbsorberMaterial = pttoMaterial;                  
+    if(fLogicAbsorber) { fLogicAbsorber->SetMaterial(fAbsorberMaterial); }
+    G4RunManager::GetRunManager()->PhysicsHasBeenModified();
+  }
+}
+void DetectorConstruction::SetAbsorberThickness(G4double val)
+{
+  fAbsorberThickness = val;
+  Construct();
+  G4RunManager::GetRunManager()->PhysicsHasBeenModified();
+}
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void DetectorConstruction::SetLBining(G4ThreeVector Value)

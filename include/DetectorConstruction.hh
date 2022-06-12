@@ -58,7 +58,7 @@ public:
 
 public:
 
-  void SetMaterial(const G4String&);
+  void SetWorldMaterial(const G4String&);
   void SetLBining (G4ThreeVector);
   void SetRBining (G4ThreeVector);
 
@@ -67,7 +67,7 @@ public:
   virtual void ConstructSDandField();
 
   const
-  G4VPhysicalVolume* GetEcal() const    {return fPhysiEcal;};
+  G4VPhysicalVolume* GetWorld() const    {return fPhysiWorld;};
   const G4Material* GetMaterial() const {return fMaterial;};
 
   // Subdivision of absorber
@@ -77,26 +77,33 @@ public:
   G4double GetdRradl() const     {return fDRradl;};
   G4double GetdLlength() const   {return fDLlength;};
   G4double GetdRlength() const   {return fDRlength;};     
-  G4double GetfullLength() const {return fEcalLength;};
-  G4double GetfullRadius() const {return fEcalRadius;};
+  
 
 private:
 
   void DefineMaterials();
   void UpdateParameters();
-
+  void SetAbsorberThickness();
+  
   G4int    fNLtot,    fNRtot;       // nb of bins: longitudinal and radial
   G4double fDLradl,   fDRradl;      // bin thickness (in radl unit)
   G4double fDLlength, fDRlength;    // bin thickness (in length unit)
 
-  G4Material* fMaterial;            //pointer to the material
+  G4Material* fWorldMaterial;            //pointer to the material
     
-  G4double fEcalLength;             //full length of the Calorimeter
-  G4double fEcalRadius;             //radius  of the Calorimeter
+  G4double fWorldLength;             //full length of the Calorimeter
+  G4double fWorldRadius;             //radius  of the Calorimeter
 
-  G4Tubs*            fSolidEcal;    //pointer to the solid calorimeter
-  G4LogicalVolume*   fLogicEcal;    //pointer to the logical calorimeter
-  G4VPhysicalVolume* fPhysiEcal;    //pointer to the physical calorimeter
+  G4Tubs*            fSolidWorld;    //pointer to the solid calorimeter
+  G4LogicalVolume*   fLogicWorld;    //pointer to the logical calorimeter
+  G4VPhysicalVolume* fPhysiWorld;    //pointer to the physical calorimeter
+
+  G4Material*        fAbsorberMaterial;
+  G4double           fAbsorberThickness;
+  G4double           fAbsorberSizeYZ;
+  G4Box*             fSolidAbsorber;
+  G4LogicalVolume*   fLogicAbsorber;
+  G4VPhysicalVolume* fPhysiAbsorber;
 
   DetectorMessenger* fDetectorMessenger;  //pointer to the Messenger
 
