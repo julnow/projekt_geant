@@ -56,7 +56,7 @@
 
 DetectorConstruction::DetectorConstruction()
  :G4VUserDetectorConstruction(),
-  fNLtot(1000),fNRtot(1000),fDLradl(0.001),fDRradl(0.001),
+  fNLtot(1000),fNRtot(1000),fDLradl(0.0008),fDRradl(0.0008),
   fDLlength(0.0),fDRlength(0.0),fWorldMaterial(nullptr),fAbsorberMaterial(nullptr),
   fSolidWorld(nullptr),fLogicWorld(nullptr),fPhysiWorld(nullptr),
   fSolidAbsorber(nullptr),fLogicAbsorber(nullptr),fPhysiAbsorber(nullptr)
@@ -64,7 +64,7 @@ DetectorConstruction::DetectorConstruction()
   DefineMaterials();
   SetWorldMaterial("G4_Galactic");
   SetAbsorberMaterial("G4_W");
-  fAbsorberSizeYZ = 5.*mm;
+  fAbsorberSizeXY = 5.*mm;
   fDetectorMessenger = new DetectorMessenger(this);
   SetAbsorberThickness(1.*mm);
 
@@ -129,7 +129,7 @@ void DetectorConstruction::UpdateParameters()
 {
   G4double Radl = fAbsorberMaterial->GetRadlen();
   fDLlength = fDLradl*Radl; fDRlength = fDRradl*Radl;
-  fWorldLength = fNLtot*fDLlength;  fWorldRadius = fNRtot*fDRlength;
+  fWorldLength = fNLtot*fDLlength*mm;  fWorldRadius = fNRtot*fDRlength*mm;
   if(fSolidWorld) {
     fSolidWorld->SetXHalfLength(0.5*fWorldLength);
     fSolidWorld->SetZHalfLength(0.5*fWorldRadius);
@@ -148,7 +148,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
   if(!fPhysiWorld) { 
     fSolidWorld = new G4Box("World",                                //its name
-                   fAbsorberSizeYZ/2,fAbsorberSizeYZ/2,fAbsorberSizeYZ/2);  //its size
+                   fWorldLength/2,fWorldLength/2,fWorldRadius/2);  //its size
                          
   fWorldMaterial = nist->FindOrBuildMaterial("G4_AIR");
   fLogicWorld = new G4LogicalVolume(fSolidWorld,          //its solid
@@ -166,14 +166,14 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   }
   if(!fPhysiAbsorber) { 
     fSolidAbsorber = new G4Box("Absorber",        
-                      fAbsorberThickness/2,fAbsorberSizeYZ/2,fAbsorberSizeYZ/2);        
+                      fAbsorberSizeXY/2,fAbsorberSizeXY/2,fAbsorberThickness/2);        
    fAbsorberMaterial = nist->FindOrBuildMaterial("Aluminium");
    fLogicAbsorber = new G4LogicalVolume(fSolidAbsorber,    //its solid
                                        fAbsorberMaterial, //its material
                                        "Absorber");       //its name
                                                 
   fPhysiAbsorber = new G4PVPlacement(0,                   //no rotation
-                        G4ThreeVector(0,0.,0.),    //its position
+                        G4ThreeVector(0.,0.,0.),    //its position
                                 fLogicAbsorber,     //its logical volume
                                 "Absorber",         //its name
                                 fLogicWorld,        //its mother

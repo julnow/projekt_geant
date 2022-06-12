@@ -86,8 +86,8 @@ void RunAction::BookHisto()
   G4double Ekin = fKin->GetParticleGun()->GetParticleEnergy();
   G4int    nLbin = fDet->GetnLtot();
   G4int    nRbin = fDet->GetnRtot();
-  G4double dLradl = fDet->GetdLradl();
-  G4double dRradl = fDet->GetdRradl();
+  G4double dLradl = fDet->GetdLlength();
+  G4double dRradl = fDet->GetdRlength();
   
   fAnalysisManager->SetFirstHistoId(1);   
   fAnalysisManager->CreateH1( "h1","total energy deposit(percent of Einc)",
@@ -100,7 +100,7 @@ void RunAction::BookHisto()
                                   110,0.,1100.*Ekin/GeV);
 
   fAnalysisManager->CreateH1( "h4","longit energy profile (% of E inc)",
-                                    nLbin,0.,nLbin*dLradl);
+                                    nLbin,0.,nLbin*dLradl;
                                     
   fAnalysisManager->CreateP1( "p4","longit energy profile (% of E inc)",
                                     nLbin,0.,nLbin*dLradl, 0., 1000.);

@@ -1,26 +1,26 @@
+void plotHisto(const char* filename)
 {
   gROOT->Reset();
   
   // Draw histos filled by Geant4 simulation 
   //   
-  TFile f("run01.root");
+  TFile f(filename);
   TCanvas* c1 = new TCanvas("c1", "  ");
-  
-  TH1D* hist1 = (TH1D*)f.Get("h1");
-  hist1->Draw("HIST");
-  
+  c1->Divide(1, 2);
+
+  c1->cd(1);
   TH1D* hist4 = (TH1D*)f.Get("h4");
+  hist4->SetTitle("longitutal energy profile deposit");
+  hist4->GetXaxis()->SetTitle("(mm)");
+  hist4->GetYaxis()->SetTitle("(% of E inc)");
   hist4->Draw("HIST");
-  
-  TH1D* prof4 = (TH1D*)f.Get("p4");
-  prof4->Draw(" ");
-    
-  TH1D* hist5 = (TH1D*)f.Get("h5");
-  hist5->Draw("HIST");
-  
+  c1->cd(2);
   TH1D* hist8 = (TH1D*)f.Get("h8");
+  hist8->SetTitle("radial energy profile deposit");
+  hist8->GetXaxis()->SetTitle("(mm)");
+  hist8->GetYaxis()->SetTitle("(% of E inc)");
   hist8->Draw("HIST");
+
+  c1->SaveAs("plotHisto.pdf");
   
-  TH1D* prof8 = (TH1D*)f.Get("p8");
-  prof8->Draw(" ");  
-}  
+}

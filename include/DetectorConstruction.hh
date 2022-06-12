@@ -80,7 +80,8 @@ public:
   G4double GetdRradl() const     {return fDRradl;};
   G4double GetdLlength() const   {return fDLlength;};
   G4double GetdRlength() const   {return fDRlength;};  
-  G4double GetfullLength() const {return fAbsorberSizeYZ;}; 
+  G4double GetfullLength() const {return fWorldLength;}; 
+  G4double GetfullRadius() const {return fWorldRadius;}; 
   
 
 private:
@@ -104,7 +105,7 @@ private:
 
   G4Material*        fAbsorberMaterial;
   G4double           fAbsorberThickness;
-  G4double           fAbsorberSizeYZ;
+  G4double           fAbsorberSizeXY;
   G4Box*             fSolidAbsorber;
   G4LogicalVolume*   fLogicAbsorber;
   G4VPhysicalVolume* fPhysiAbsorber;
