@@ -50,6 +50,8 @@
 #include "G4UnitsTable.hh"
 
 #include "G4AutoDelete.hh"
+#include "G4VisAttributes.hh"
+
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 DetectorConstruction::DetectorConstruction()
@@ -59,7 +61,7 @@ DetectorConstruction::DetectorConstruction()
   fSolidWorld(nullptr),fLogicWorld(nullptr),fPhysiWorld(nullptr)
 {
   DefineMaterials();
-  SetMaterial("G4_Galactic");
+  SetWorldMaterial("G4_Galactic");
   fAbsorberSizeYZ = 10.*mm;
   fAbsorberThickness = 1.*mm;
   fDetectorMessenger = new DetectorMessenger(this);
@@ -126,7 +128,7 @@ void DetectorConstruction::UpdateParameters()
   fDLlength = fDLradl*Radl; fDRlength = fDRradl*Radl;
   fWorldLength = fNLtot*fDLlength;  fWorldRadius = fNRtot*fDRlength;
   if(fSolidWorld) {
-    fSolidWorld->SetOuterRadius(fWorldRadius);
+    fSolidWorld->SetYHalfLength(fWorldRadius);
     fSolidWorld->SetZHalfLength(0.5*fWorldLength);
   }
 }
@@ -139,6 +141,8 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   //
   // World
   //
+  G4NistManager* nist = G4NistManager::Instance();
+
   if(!fPhysiWorld) { 
     fSolidWorld = new G4Box("World",                                //its name
                    fAbsorberSizeYZ/2,fAbsorberSizeYZ/2,fAbsorberSizeYZ/2);  //its size

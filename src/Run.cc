@@ -142,7 +142,7 @@ void Run::FillPerEvent()
 
   G4double Ekin=fKin->GetParticleGun()->GetParticleEnergy();
   G4double mass=fKin->GetParticleGun()->GetParticleDefinition()->GetPDGMass();
-  G4double radl=fDet->GetMaterial()->GetRadlen();
+  G4double radl=fDet->GetWorldMaterial()->GetRadlen();
 
   G4AnalysisManager* analysisManager = G4AnalysisManager::Instance();
   analysisManager->FillH1(1, 100.*dLCumul/(Ekin+mass));
@@ -279,7 +279,7 @@ void Run::EndOfRun(G4double edep, G4double rms, G4double& limit)
       
   //track length
   //
-  norme = 1./(NbOfEvents*(fDet->GetMaterial()->GetRadlen()));
+  norme = 1./(NbOfEvents*(fDet->GetWorldMaterial()->GetRadlen()));
   G4double MeanChargTrLength = norme*fSumChargTrLength;
   G4double  rmsChargTrLength = 
     norme*std::sqrt(std::abs(NbOfEvents*fSum2ChargTrLength

@@ -50,8 +50,8 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction * Det)
   fDetDir = new G4UIdirectory("/testem/det/");
   fDetDir->SetGuidance("detector construction commands");
 
-  fMaterCmd = new G4UIcmdWithAString("/testem/det/setMat",this);
-  fMaterCmd->SetGuidance("Select Material.");
+  fMaterCmd = new G4UIcmdWithAString("/testem/det/setAbsorberMat",this);
+  fMaterCmd->SetGuidance("Select Absorber Material.");
   fMaterCmd->SetParameterName("material",false);
   fMaterCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
   fMaterCmd->SetToBeBroadcasted(false);
@@ -63,6 +63,14 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction * Det)
   fLBinCmd->SetRange("nLtot>=1 && dLradl>0");
   fLBinCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
   fLBinCmd->SetToBeBroadcasted(false);
+
+  fAbsThickCmd = new G4UIcmdWithADoubleAndUnit("/testem/det/setAbsThick",this);
+  fAbsThickCmd->SetGuidance("set absorber thickness");
+  fAbsThickCmd->SetGuidance("absorber thickness (in your unit)");
+  fAbsThickCmd->SetParameterName("thickness",false);
+  fAbsThickCmd->SetUnitCategory("Length");
+  fAbsThickCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
+  fAbsThickCmd->SetToBeBroadcasted(false);
 
   fRBinCmd = new G4UIcmdWith3Vector("/testem/det/setRbin",this);
   fRBinCmd->SetGuidance("set radial bining");
@@ -89,13 +97,17 @@ DetectorMessenger::~DetectorMessenger()
 void DetectorMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
 { 
   if( command == fMaterCmd )
-   { fDetector->SetMaterial(newValue);}
+   { fDetector->SetAbsorberMaterial(newValue);}
    
   if( command == fLBinCmd )
    { fDetector->SetLBining(fLBinCmd->GetNew3VectorValue(newValue));}
 
   if( command == fRBinCmd )
    { fDetector->SetRBining(fRBinCmd->GetNew3VectorValue(newValue));}
+
+  if( command == fAbsThickCmd )
+   { fDetector->SetAbsorberThickness(fAbsThickCmd->GetNewDoubleValue(newValue));}
+   
 
 }
 

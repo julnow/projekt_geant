@@ -61,6 +61,7 @@ private:
   G4UIcmdWithAString*        fMaterCmd;
   G4UIcmdWith3Vector*        fLBinCmd;
   G4UIcmdWith3Vector*        fRBinCmd;
+  G4UIcmdWithADoubleAndUnit*  fAbsThickCmd;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

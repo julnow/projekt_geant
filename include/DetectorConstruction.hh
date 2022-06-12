@@ -40,12 +40,13 @@
 #include "globals.hh"
 #include "G4Cache.hh"
 
-class G4Tubs;
+
+class G4Box;
 class G4LogicalVolume;
 class DetectorMessenger;
 class G4GlobalMagFieldMessenger;
 
-const G4int kMaxBin = 500;
+const G4int kMaxBin = 1000;
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -61,6 +62,8 @@ public:
   void SetWorldMaterial(const G4String&);
   void SetLBining (G4ThreeVector);
   void SetRBining (G4ThreeVector);
+  void SetAbsorberThickness(G4double val);
+  void SetAbsorberMaterial(const G4String& materialChoice);
 
   virtual G4VPhysicalVolume* Construct();
 
@@ -68,7 +71,7 @@ public:
 
   const
   G4VPhysicalVolume* GetWorld() const    {return fPhysiWorld;};
-  const G4Material* GetMaterial() const {return fMaterial;};
+  const G4Material* GetWorldMaterial() const {return fWorldMaterial;};
 
   // Subdivision of absorber
   G4int    GetnLtot() const      {return fNLtot;};
@@ -76,15 +79,16 @@ public:
   G4double GetdLradl() const     {return fDLradl;};
   G4double GetdRradl() const     {return fDRradl;};
   G4double GetdLlength() const   {return fDLlength;};
-  G4double GetdRlength() const   {return fDRlength;};     
+  G4double GetdRlength() const   {return fDRlength;};  
+  G4double GetfullLength() const {return fAbsorberSizeYZ;}; 
   
 
 private:
 
   void DefineMaterials();
   void UpdateParameters();
-  void SetAbsorberThickness();
-  
+ 
+
   G4int    fNLtot,    fNRtot;       // nb of bins: longitudinal and radial
   G4double fDLradl,   fDRradl;      // bin thickness (in radl unit)
   G4double fDLlength, fDRlength;    // bin thickness (in length unit)
@@ -94,7 +98,7 @@ private:
   G4double fWorldLength;             //full length of the Calorimeter
   G4double fWorldRadius;             //radius  of the Calorimeter
 
-  G4Tubs*            fSolidWorld;    //pointer to the solid calorimeter
+  G4Box*            fSolidWorld;    //pointer to the solid calorimeter
   G4LogicalVolume*   fLogicWorld;    //pointer to the logical calorimeter
   G4VPhysicalVolume* fPhysiWorld;    //pointer to the physical calorimeter
 
