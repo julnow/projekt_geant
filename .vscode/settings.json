@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "plotHisto.C": "cpp",
+        "egs4.C": "cpp",
+        "__config": "cpp",
+        "__nullptr": "cpp"
+    }
+}
