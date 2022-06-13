@@ -56,13 +56,13 @@
 
 DetectorConstruction::DetectorConstruction()
  :G4VUserDetectorConstruction(),
-  fNLtot(1000),fNRtot(1000),fDLradl(0.0008),fDRradl(0.0008),
-  fDLlength(0.0),fDRlength(0.0),fWorldMaterial(nullptr),fAbsorberMaterial(nullptr),
+  fNLtot(1000),fNRtot(1000),fDLradl(0.0000001),fDRradl(0.0000001),
+  fDLlength(0.0),fDRlength(0.0),fWorldMaterial(nullptr),
   fSolidWorld(nullptr),fLogicWorld(nullptr),fPhysiWorld(nullptr),
-  fSolidAbsorber(nullptr),fLogicAbsorber(nullptr),fPhysiAbsorber(nullptr)
+  fSolidAbsorber(nullptr),fLogicAbsorber(nullptr),fPhysiAbsorber(nullptr),fAbsorberMaterial(nullptr)
 {
   DefineMaterials();
-  SetWorldMaterial("G4_Galactic");
+  SetWorldMaterial("G4_AIR");
   SetAbsorberMaterial("G4_W");
   fAbsorberSizeXY = 5.*mm;
   fDetectorMessenger = new DetectorMessenger(this);

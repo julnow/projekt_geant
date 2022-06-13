@@ -40,7 +40,6 @@
 
 #include "G4Run.hh"
 #include "G4RunManager.hh"
-#include "G4AnalysisManager.hh"
 #include "G4SystemOfUnits.hh"
 
 #include "Randomize.hh"
@@ -57,10 +56,11 @@ RunAction::RunAction(DetectorConstruction* det, PrimaryGeneratorAction* kin)
   // Create analysis manager
   // The choice of analysis technology is done via selection of a namespace
   fAnalysisManager = G4AnalysisManager::Instance();
+  fAnalysisManager->SetDefaultFileType("root");
 
   // Set the default file name "testem2"
   // which can be then redefine in a macro via UI command
-  fAnalysisManager->SetFileName("runMoje.root");
+  fAnalysisManager->SetFileName("histMoje");
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -78,7 +78,7 @@ void RunAction::BookHisto()
   fAnalysisManager = G4AnalysisManager::Instance();
     
   // Open an output file
-  fAnalysisManager->OpenFile("runMoje.root");
+  fAnalysisManager->OpenFile();
   fAnalysisManager->SetVerboseLevel(1);
 
   // Creating histograms
@@ -100,7 +100,7 @@ void RunAction::BookHisto()
                                   110,0.,1100.*Ekin/GeV);
 
   fAnalysisManager->CreateH1( "h4","longit energy profile (% of E inc)",
-                                    nLbin,0.,nLbin*dLradl*3000);
+                                    nLbin,0.,nLbin*dLradl);
                                     
   fAnalysisManager->CreateP1( "p4","longit energy profile (% of E inc)",
                                     nLbin,0.,nLbin*dLradl, 0., 1000.);
@@ -116,7 +116,7 @@ void RunAction::BookHisto()
                                   nLbin,Zmin,Zmax);
 
   fAnalysisManager->CreateH1( "h8","radial energy profile (% of E inc)",
-                                  nRbin,0.,nRbin*dRradl*3000);
+                                  nRbin,0.,nRbin*dRradl);
                                   
   fAnalysisManager->CreateP1( "p8","radial energy profile (% of E inc)",
                                   nRbin,0.,nRbin*dRradl, 0., 1000.);
@@ -168,7 +168,7 @@ void RunAction::EndOfRunAction(const G4Run*)
 
  // show Rndm status
  if (isMaster) G4Random::showEngineStatus();
- fAnalysisManager = G4AnalysisManager::Instance(); 
+
  // save histos and close analysis
  fAnalysisManager->Write();
  fAnalysisManager->CloseFile(); 
