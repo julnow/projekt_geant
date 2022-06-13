@@ -211,7 +211,7 @@ void Run::EndOfRun(G4double edep, G4double rms, G4double& limit)
   
   //longitudinal
   //
-  G4double dLradl = fDet->GetdLradl();
+  G4double dLradl = fDet->GetdLradl()*3000;
 
   MyVector MeanELongit(f_nLbin),      rmsELongit(f_nLbin);
   MyVector MeanELongitCumul(f_nLbin), rmsELongitCumul(f_nLbin);
@@ -238,7 +238,7 @@ void Run::EndOfRun(G4double edep, G4double rms, G4double& limit)
 
   //radial
   //
-  G4double dRradl = fDet->GetdRradl();
+  G4double dRradl = fDet->GetdRradl()*3000;
 
   MyVector MeanERadial(f_nRbin),      rmsERadial(f_nRbin);
   MyVector MeanERadialCumul(f_nRbin), rmsERadialCumul(f_nRbin);
