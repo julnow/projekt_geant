@@ -5,7 +5,7 @@
 Double_t ScaleX(Double_t x)
 {
   Double_t v;
-  v = 30000 * x; // "linear scaling" function example
+  v = 300000 * x; // "linear scaling" function example
   return v;
 }
 

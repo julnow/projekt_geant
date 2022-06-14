@@ -66,7 +66,7 @@ DetectorConstruction::DetectorConstruction()
   SetAbsorberMaterial("G4_W");
   fAbsorberSizeXY = 5.*mm;
   fDetectorMessenger = new DetectorMessenger(this);
-  SetAbsorberThickness(1.*mm);
+  fAbsorberThickness=1.*mm;
 
 }
 
@@ -218,6 +218,8 @@ void DetectorConstruction::SetAbsorberThickness(G4double val)
 {
   fAbsorberThickness = val;
   Construct();
+  G4RunManager::GetRunManager()->PhysicsHasBeenModified();
+
 }
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
