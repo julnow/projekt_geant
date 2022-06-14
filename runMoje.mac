@@ -2,19 +2,20 @@
 /control/verbose 2
 /run/verbose 2
 #
-/testem/det/setAbsorberMat G4_al
-/testem/det/setLbin 1000 0.000001
-/testem/det/setRbin 1000 0.000001
-
+/testem/det/setAbsThick .8 mm
+/testem/det/setAbsorberMat G4_Al
+/testem/det/setLbin 1000 0.00000001
+/testem/det/setRbin 1000 0.00000001
+#
 /run/initialize
 #
 /gun/particle e-
-/gun/energy 10 MeV
+/gun/energy 20 MeV
 #
 # histogram file
-/analysis/setFileName Al10MeV5mm
+/analysis/setFileName runOutput
 #
-/run/printProgress 50
+/run/printProgress 1000
 /testem/run/verbose 1
 #
 /run/beamOn 15000

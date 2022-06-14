@@ -1,0 +1,32 @@
+#
+/control/verbose 2
+/run/verbose 2
+#
+/testem/det/setAbsThick 1. mm
+/testem/det/setAbsorberMat G4_W
+/testem/det/setLbin 1000 0.00000001
+/testem/det/setRbin 1000 0.00000001
+#
+/run/initialize
+#
+/gun/particle e-
+/gun/energy 20 MeV
+#
+# histogram file
+/analysis/setFileName Vis
+#
+/run/printProgress 250
+/testem/run/verbose 1
+#
+/run/initialize
+/testem/run/verbose 1
+/vis/open OGL
+/vis/drawVolume
+/vis/viewer/set/viewpointThetaPhi 120 150
+/vis/viewer/set/style surface
+/vis/scene/add/trajectories smooth
+/vis/modeling/trajectories/create/drawByCharge
+/vis/modeling/trajectories/drawByCharge-0/set 1 red
+/vis/modeling/trajectories/drawByCharge-0/set -1 blue
+/vis/modeling/trajectories/drawByCharge-0/set 0 green
+#/run/beamOn 15000
