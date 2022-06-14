@@ -56,7 +56,7 @@
 
 DetectorConstruction::DetectorConstruction()
  :G4VUserDetectorConstruction(),
-  fNLtot(1000),fNRtot(1000),fDLradl(0.0000001),fDRradl(0.0000001),
+  fNLtot(1000),fNRtot(1000),fDLradl(0.000000001),fDRradl(0.000000001),
   fDLlength(0.0),fDRlength(0.0),fWorldMaterial(nullptr),
   fSolidWorld(nullptr),fLogicWorld(nullptr),fPhysiWorld(nullptr),
   fSolidAbsorber(nullptr),fLogicAbsorber(nullptr),fPhysiAbsorber(nullptr),fAbsorberMaterial(nullptr)
@@ -127,9 +127,9 @@ void DetectorConstruction::DefineMaterials()
 
 void DetectorConstruction::UpdateParameters()
 {
-  G4double Radl = fAbsorberMaterial->GetRadlen();
+  G4double Radl = fWorldMaterial->GetRadlen();
   fDLlength = fDLradl*Radl; fDRlength = fDRradl*Radl;
-  fWorldLength = fNLtot*fDLlength*mm;  fWorldRadius = fNRtot*fDRlength*mm;
+  fWorldLength = fNLtot*fDLlength;  fWorldRadius = fNRtot*fDRlength;
   if(fSolidWorld) {
     fSolidWorld->SetXHalfLength(0.5*fWorldLength);
     fSolidWorld->SetZHalfLength(0.5*fWorldRadius);
