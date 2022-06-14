@@ -1,7 +1,7 @@
 #----------------------------------------------------------------------------
 # Setup the project
 cmake_minimum_required(VERSION 3.16...3.21)
-project(TestEm2)
+project(ProjektGeant)
 
 #----------------------------------------------------------------------------
 # Find Geant4 package, activating all available UI and Vis drivers by default
@@ -31,19 +31,19 @@ file(GLOB headers ${PROJECT_SOURCE_DIR}/include/*.hh)
 #----------------------------------------------------------------------------
 # Add the executable, and link it to the Geant4 libraries
 #
-add_executable(TestEm2 TestEm2.cc ${sources} ${headers})
-target_link_libraries(TestEm2 ${Geant4_LIBRARIES})
+add_executable(ProjektGeant ProjektGeant.cc ${sources} ${headers})
+target_link_libraries(ProjektGeant ${Geant4_LIBRARIES})
 
 #----------------------------------------------------------------------------
 # Copy all scripts to the build directory, i.e. the directory in which we
 # build TestEm2. This is so that we can run the executable directly because it
 # relies on these scripts being in the current working directory.
 #
-set(TestEm2_SCRIPTS
-    egs4.mac run01.mac run02.mac run03.mac stepMax.mac TestEm2.in TestEm2.out vis.mac
+set(ProjektGeant_SCRIPTS
+    egs4.mac run01.mac run02.mac run03.mac stepMax.mac vis.mac
   )
   
-foreach(_script ${TestEm2_SCRIPTS})
+foreach(_script ${ProjektGeant_SCRIPTS})
   configure_file(
     ${PROJECT_SOURCE_DIR}/${_script}
     ${PROJECT_BINARY_DIR}/${_script}
@@ -54,5 +54,5 @@ endforeach()
 #----------------------------------------------------------------------------
 # Install the executable to 'bin' directory under CMAKE_INSTALL_PREFIX
 #
-install(TARGETS TestEm2 DESTINATION bin)
+install(TARGETS ProjektGeant DESTINATION bin)
 
